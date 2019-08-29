@@ -1,5 +1,7 @@
 package me.dekimpe;
 
+import me.dekimpe.bolt.*;
+
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.storm.Config;
 import org.apache.storm.StormSubmitter;
@@ -29,6 +31,9 @@ public class App
         
         builder.setBolt("tweets-parsed", new TweetsParsingBolt())
                 .shuffleGrouping("bitcoins-rates-spout");
+        
+        builder.setBolt("save-tweets", new TweetsSaveBolt())
+                .shuffleGrouping("tweets-parsed");
         
         StormTopology topology = builder.createTopology();
         Config config = new Config();

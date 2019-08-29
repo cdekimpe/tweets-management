@@ -5,10 +5,54 @@
  */
 package me.dekimpe.bolt;
 
+import java.util.ArrayList;
+import java.util.Map;
+import org.apache.storm.task.OutputCollector;
+import org.apache.storm.task.TopologyContext;
+import org.apache.storm.topology.OutputFieldsDeclarer;
+import org.apache.storm.topology.base.BaseRichBolt;
+import org.apache.storm.tuple.Fields;
+import org.apache.storm.tuple.Tuple;
+import org.apache.storm.tuple.Values;
+import org.json.JSONObject;
+
 /**
  *
  * @author cdekimpe
  */
-public class TweetsParsingBolt {
+public class TweetsParsingBolt extends BaseRichBolt  {
+    
+    private OutputCollector outputCollector;
+
+    @Override
+    public void prepare(Map map, TopologyContext tc, OutputCollector oc) {
+        outputCollector = oc;
+    }
+
+    @Override
+    public void execute(Tuple input) {
+        try {
+            process(input);
+            outputCollector.ack(input);
+        } catch (Exception e) {
+            e.printStackTrace();
+            outputCollector.fail(input);
+        }
+    }
+    
+    // Input example : {"timestamp": 1563961571, "eur": 8734.6145}
+    private void process(Tuple input) {
+        JSONObject obj = new org.json.JSONObject(input.getStringByField("value"));
+        String date = (String) obj.get("date");
+        String text = (String) obj.get("text");
+        ArrayList<String> hashtags = (ArrayList<String>) obj.get("hashtags");
+        outputCollector.emit(new Values(date, text, hashtags));
+        outputCollector.ack(input);
+    }
+    
+    @Override
+    public void declareOutputFields(OutputFieldsDeclarer declarer) {
+        declarer.declare(new Fields("date", "text", "hashtags"));
+    }
     
 }
