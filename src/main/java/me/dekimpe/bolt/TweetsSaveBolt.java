@@ -10,12 +10,23 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import me.dekimpe.types.Tweet;
+import org.apache.hadoop.fs.Path;
 import org.apache.storm.task.OutputCollector;
 import org.apache.storm.task.TopologyContext;
 import org.apache.storm.topology.OutputFieldsDeclarer;
 import org.apache.storm.topology.base.BaseWindowedBolt;
 import org.apache.storm.tuple.Tuple;
 import org.apache.storm.windowing.TupleWindow;
+import org.apache.storm.hdfs.bolt.AvroGenericRecordBolt;
+import org.apache.storm.hdfs.rotation.FileRotationPolicy;
+import org.apache.storm.hdfs.rotation.FileSizeRotationPolicy;
+import org.apache.storm.hdfs.sync.SyncPolicy;
+import org.apache.storm.hdfs.sync.CountSyncPolicy;
+import org.apache.storm.hdfs.format.FileNameFormat;
+import org.apache.storm.hdfs.format.DefaultFileNameFormat;
+import org.apache.storm.hdfs.format.RecordFormat;
+import org.apache.storm.hdfs.common.Partitioner;
+import org.apache.storm.tuple.Fields;
 
 /**
  *
@@ -50,25 +61,36 @@ public class TweetsSaveBolt extends BaseWindowedBolt {
         SyncPolicy syncPolicy = new CountSyncPolicy(1000);
 
         // rotate files when they reach 5MB
-        FileRotationPolicy rotationPolicy = new FileSizeRotationPolicy(5.0f, Units.MB);
+        FileRotationPolicy rotationPolicy = new FileSizeRotationPolicy(64.0f, FileSizeRotationPolicy.Units.MB);
 
         FileNameFormat fileNameFormat = new DefaultFileNameFormat()
                 .withExtension(".avro")
-                .withPath("/data/");
+                .withPath("/tweets/");
 
-        // create sequence format instance.
-        DefaultSequenceFormat format = new DefaultSequenceFormat("timestamp", "sentence");
+        
+        Partitioner partitoner = new Partitioner() {
+            public String getPartitionPath(Tuple tuple) {
+                Tweet tweet = (Tweet) tuple.getValueByField("tweet");
+                int year = tweet.getDate().getYear();
+                int month = tweet.getDate().getMonth();
+                int day = tweet.getDate().getDay();
+                int hour = tweet.getDate().getHours();
+                return Path.SEPARATOR + year + Path.SEPARATOR + month + Path.SEPARATOR + day + Path.SEPARATOR + hour;
+            }
+        };
 
         AvroGenericRecordBolt bolt = new AvroGenericRecordBolt()
-                .withFsUrl("hdfs://localhost:54310")
+                .withFsUrl("hdfs://hdfs-namenode:9000")
                 .withFileNameFormat(fileNameFormat)
                 .withRotationPolicy(rotationPolicy)
-                .withSyncPolicy(syncPolicy);
+                //.withSyncPolicy(syncPolicy)
+                .withPartitioner();
         
     }
 
     @Override
-    public void declareOutputFields(OutputFieldsDeclarer ofd) {   
+    public void declareOutputFields(OutputFieldsDeclarer declarer) {
+        declarer.declare(new Fields("tweet"));
     }
     
 }
