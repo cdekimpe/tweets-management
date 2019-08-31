@@ -33,13 +33,9 @@
     </dependency>
     <dependency>
         <groupId>org.apache.hadoop</groupId>
-        <artifactId>hadoop-client</artifactId>
-        <version>2.6.1</version>
-    </dependency>
-    <dependency>
-        <groupId>org.apache.hadoop</groupId>
-        <artifactId>hadoop-hdfs</artifactId>
-        <version>2.6.1</version>
+        <artifactId>hadoop-hdfs-client</artifactId>
+        <version>3.2.0</version>
+        <scope>provided</scope>
     </dependency>
     <dependency>
         <groupId>org.apache.storm</groupId>
