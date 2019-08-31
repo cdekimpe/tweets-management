@@ -9,6 +9,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 import org.apache.storm.task.OutputCollector;
 import org.apache.storm.task.TopologyContext;
@@ -17,6 +18,7 @@ import org.apache.storm.topology.base.BaseRichBolt;
 import org.apache.storm.tuple.Fields;
 import org.apache.storm.tuple.Tuple;
 import org.apache.storm.tuple.Values;
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 /**
@@ -48,10 +50,20 @@ public class TweetsParsingBolt extends BaseRichBolt  {
         JSONObject obj = new org.json.JSONObject(input.getStringByField("value"));
         String dateString = (String) obj.get("date");
         String text = (String) obj.get("text");
-        ArrayList<String> hashtags = (ArrayList<String>) obj.get("hashtags");
+        
+        // Parsing List of String for hashtags
+        List<String> hashtags = new ArrayList<>();
+        JSONArray jArray = obj.getJSONArray("hashtags");
+        if (jArray != null) { 
+           for (int i=0;i<jArray.length();i++){ 
+            hashtags.add(jArray.getString(i));
+           } 
+        } 
+
         SimpleDateFormat sdf = new SimpleDateFormat("E M dd HH:mm:ss Z yyyy");
         Date date = sdf.parse(dateString);
         System.out.println(date);
+        
         outputCollector.emit(new Values(date, text, hashtags));
         outputCollector.ack(input);
     }
