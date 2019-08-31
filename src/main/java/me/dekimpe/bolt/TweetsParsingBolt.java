@@ -5,7 +5,9 @@
  */
 package me.dekimpe.bolt;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Map;
 import org.apache.storm.task.OutputCollector;
 import org.apache.storm.task.TopologyContext;
@@ -43,9 +45,11 @@ public class TweetsParsingBolt extends BaseRichBolt  {
     // Input example : {"timestamp": 1563961571, "eur": 8734.6145}
     private void process(Tuple input) {
         JSONObject obj = new org.json.JSONObject(input.getStringByField("value"));
-        String date = (String) obj.get("date");
+        String dateString = (String) obj.get("date");
         String text = (String) obj.get("text");
         ArrayList<String> hashtags = (ArrayList<String>) obj.get("hashtags");
+        SimpleDateFormat sdf = new SimpleDateFormat("E M dd HH:mm:ss Z yyyy");
+        Date date = sdf.parse(dateString);
         outputCollector.emit(new Values(date, text, hashtags));
         outputCollector.ack(input);
     }
