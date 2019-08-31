@@ -30,7 +30,7 @@ public class App
     	builder.setSpout("tweets-spout", new KafkaSpout<String, String>(spoutConfig));
         
         builder.setBolt("tweets-parsed", new TweetsParsingBolt())
-                .shuffleGrouping("bitcoins-rates-spout");
+                .shuffleGrouping("tweets-spout");
         
         builder.setBolt("save-tweets", new TweetsSaveBolt())
                 .shuffleGrouping("tweets-parsed");
