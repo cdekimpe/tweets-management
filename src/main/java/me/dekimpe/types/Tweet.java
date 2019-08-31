@@ -47,7 +47,12 @@ public class Tweet implements Serializable {
     }
     
     public String toString() {
-        return "{\"text\": \"" + text + "\", \"date\": \"" + date + "\", \"hashtags\": " + hashtags;
+        String result =  "{\"text\": \"" + text + "\", \"date\": \"" + date + "\", \"hashtags\": [";
+        for (String hashtag : hashtags) {
+            result += '"' + hashtag + '"';
+        }
+        result += "]}";
+        return result;
     }
     
 }
