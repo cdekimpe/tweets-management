@@ -47,6 +47,7 @@ public class TweetsParsingBolt extends BaseRichBolt  {
     
     // Input example : {"timestamp": 1563961571, "eur": 8734.6145}
     private void process(Tuple input) throws ParseException {
+        
         JSONObject obj = new org.json.JSONObject(input.getStringByField("value"));
         String dateString = (String) obj.get("date");
         String text = (String) obj.get("text");
@@ -60,7 +61,7 @@ public class TweetsParsingBolt extends BaseRichBolt  {
            } 
         } 
 
-        SimpleDateFormat sdf = new SimpleDateFormat("E M dd HH:mm:ss Z yyyy");
+        SimpleDateFormat sdf = new SimpleDateFormat("EEE MMM dd HH:mm:ss Z yyyy");
         Date date = sdf.parse(dateString);
         System.out.println(date);
         
