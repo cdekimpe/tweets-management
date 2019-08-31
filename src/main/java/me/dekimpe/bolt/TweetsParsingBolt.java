@@ -64,6 +64,7 @@ public class TweetsParsingBolt extends BaseRichBolt  {
         SimpleDateFormat sdf = new SimpleDateFormat("EEE MMM dd HH:mm:ss Z yyyy");
         Date date = sdf.parse(dateString);
         System.out.println(date);
+        System.out.println(hashtags);
         
         outputCollector.emit(new Values(date, text, hashtags));
         outputCollector.ack(input);
