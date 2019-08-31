@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import me.dekimpe.types.Tweet;
 import org.apache.storm.task.OutputCollector;
 import org.apache.storm.task.TopologyContext;
 import org.apache.storm.topology.OutputFieldsDeclarer;
@@ -47,30 +48,38 @@ public class TweetsParsingBolt extends BaseRichBolt  {
     
     // Input example : {"timestamp": 1563961571, "eur": 8734.6145}
     private void process(Tuple input) throws ParseException {
-        
         JSONObject obj = new org.json.JSONObject(input.getStringByField("value"));
-        String dateString = (String) obj.get("date");
+        
+        // Getting text from the tweet, no parsing needed
         String text = (String) obj.get("text");
         
         // Parsing List of String for hashtags
         List<String> hashtags = new ArrayList<>();
         JSONArray jArray = obj.getJSONArray("hashtags");
-        if (jArray != null) { 
-           for (int i=0;i<jArray.length();i++){ 
-            hashtags.add(jArray.getString(i));
-           } 
-        } 
-
+        if (jArray != null) {
+            for (int i = 0; i < jArray.length(); i++) {
+                hashtags.add(jArray.getString(i));
+            }
+        }
+        
+        // Parsing date string from Twitter to Date Java Object
+        String dateString = (String) obj.get("date");
         SimpleDateFormat sdf = new SimpleDateFormat("EEE MMM dd HH:mm:ss Z yyyy");
         Date date = sdf.parse(dateString);
         
-        outputCollector.emit(new Values(date, text, hashtags));
+        // Setting all the elements to the Tweet Type Object
+        Tweet tweet = new Tweet();
+        tweet.setText(text);
+        tweet.setDate(date);
+        tweet.setHashtags(hashtags);
+
+        outputCollector.emit(new Values(tweet));
         outputCollector.ack(input);
     }
     
     @Override
     public void declareOutputFields(OutputFieldsDeclarer declarer) {
-        declarer.declare(new Fields("date", "text", "hashtags"));
+        declarer.declare(new Fields("tweet"));
     }
     
 }

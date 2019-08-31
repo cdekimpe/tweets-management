@@ -5,6 +5,7 @@
  */
 package me.dekimpe.bolt;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -40,17 +41,29 @@ public class TweetsSaveBolt extends BaseWindowedBolt {
     
     private void process(TupleWindow inputWindow) {
         
-        Tweet tweet;      
+        List<Tweet> tweets = new ArrayList<Tweet>();
         for (Tuple input : inputWindow.get()) {
-            String text = input.getStringByField("text");
-            Date date = (Date) input.getValueByField("date");
-            List<String> hashtags = (List<String>) input.getValueByField("hashtags");
-            tweet = new Tweet();
-            tweet.setText(text);
-            tweet.setDate(date);
-            tweet.setHashtags(hashtags);
-            System.out.println(tweet);
+            tweets.add((Tweet) input.getValueByField("tweet"));
         }
+        
+        // sync the filesystem after every 1k tuples
+        SyncPolicy syncPolicy = new CountSyncPolicy(1000);
+
+        // rotate files when they reach 5MB
+        FileRotationPolicy rotationPolicy = new FileSizeRotationPolicy(5.0f, Units.MB);
+
+        FileNameFormat fileNameFormat = new DefaultFileNameFormat()
+                .withExtension(".avro")
+                .withPath("/data/");
+
+        // create sequence format instance.
+        DefaultSequenceFormat format = new DefaultSequenceFormat("timestamp", "sentence");
+
+        AvroGenericRecordBolt bolt = new AvroGenericRecordBolt()
+                .withFsUrl("hdfs://localhost:54310")
+                .withFileNameFormat(fileNameFormat)
+                .withRotationPolicy(rotationPolicy)
+                .withSyncPolicy(syncPolicy);
         
     }
 
