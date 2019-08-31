@@ -32,8 +32,8 @@ public class App
         builder.setBolt("tweets-parsed", new TweetsParsingBolt())
                 .shuffleGrouping("tweets-spout");
         
-        /*builder.setBolt("save-tweets", new TweetsSaveBolt())
-                .shuffleGrouping("tweets-parsed");*/
+        builder.setBolt("save-tweets", new TweetsSaveBolt())
+                .shuffleGrouping("tweets-parsed");
         
         StormTopology topology = builder.createTopology();
         Config config = new Config();
