@@ -51,7 +51,8 @@ public class Tweet implements Serializable {
         for (String hashtag : hashtags) {
             result += '"' + hashtag + "\", ";
         }
-        result = result.substring(0, result.length() - 2);
+        if (hashtags != null)
+            result = result.substring(0, result.length() - 2);
         result += "]}";
         return result;
     }
