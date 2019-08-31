@@ -5,6 +5,7 @@
  */
 package me.dekimpe.bolt;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -43,13 +44,14 @@ public class TweetsParsingBolt extends BaseRichBolt  {
     }
     
     // Input example : {"timestamp": 1563961571, "eur": 8734.6145}
-    private void process(Tuple input) {
+    private void process(Tuple input) throws ParseException {
         JSONObject obj = new org.json.JSONObject(input.getStringByField("value"));
         String dateString = (String) obj.get("date");
         String text = (String) obj.get("text");
         ArrayList<String> hashtags = (ArrayList<String>) obj.get("hashtags");
         SimpleDateFormat sdf = new SimpleDateFormat("E M dd HH:mm:ss Z yyyy");
         Date date = sdf.parse(dateString);
+        System.out.println(date);
         outputCollector.emit(new Values(date, text, hashtags));
         outputCollector.ack(input);
     }
