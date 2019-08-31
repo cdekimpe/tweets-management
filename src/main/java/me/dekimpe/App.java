@@ -4,6 +4,7 @@ import me.dekimpe.bolt.*;
 
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.storm.Config;
+import org.apache.storm.LocalCluster;
 import org.apache.storm.StormSubmitter;
 import org.apache.storm.generated.AlreadyAliveException;
 import org.apache.storm.generated.AuthorizationException;
@@ -21,7 +22,7 @@ import org.apache.storm.topology.base.BaseWindowedBolt;
 public class App 
 {
     public static void main( String[] args ) throws AlreadyAliveException,
-            InvalidTopologyException, AuthorizationException
+            InvalidTopologyException, AuthorizationException, Exception
     {
         TopologyBuilder builder = new TopologyBuilder();
         
@@ -43,6 +44,8 @@ public class App
         config.setMessageTimeoutSecs(120);
     	String topologyName = "Tweets-Management";
         
-        StormSubmitter.submitTopology(topologyName, config, topology);
+        LocalCluster cluster = new LocalCluster();
+        cluster.submitTopology(topologyName, config, topology);
+        //StormSubmitter.submitTopology(topologyName, config, topology);
     }
 }
