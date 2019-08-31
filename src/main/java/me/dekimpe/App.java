@@ -24,7 +24,7 @@ public class App
     {
         TopologyBuilder builder = new TopologyBuilder();
         
-        KafkaSpoutConfig.Builder<String, String> spoutConfigBuilder = KafkaSpoutConfig.builder("kafka1:9092", "tweets")
+        KafkaSpoutConfig.Builder<String, String> spoutConfigBuilder = KafkaSpoutConfig.builder("kafka1:9092", "tests")
                 .setProp(ConsumerConfig.GROUP_ID_CONFIG, "batch-layer");
     	KafkaSpoutConfig<String, String> spoutConfig = spoutConfigBuilder.build();
     	builder.setSpout("tweets-spout", new KafkaSpout<String, String>(spoutConfig));
