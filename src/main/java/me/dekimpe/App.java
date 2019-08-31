@@ -12,6 +12,7 @@ import org.apache.storm.generated.StormTopology;
 import org.apache.storm.kafka.spout.KafkaSpout;
 import org.apache.storm.kafka.spout.KafkaSpoutConfig;
 import org.apache.storm.topology.TopologyBuilder;
+import org.apache.storm.topology.base.BaseWindowedBolt;
 
 /**
  * Hello world!
@@ -32,7 +33,7 @@ public class App
         builder.setBolt("tweets-parsed", new TweetsParsingBolt())
                 .shuffleGrouping("tweets-spout");
         
-        builder.setBolt("save-tweets", new TweetsSaveBolt())
+        builder.setBolt("save-tweets", new TweetsSaveBolt().withTumblingWindow(BaseWindowedBolt.Duration.of(1000 * 60)))
                 .shuffleGrouping("tweets-parsed");
         
         StormTopology topology = builder.createTopology();
