@@ -44,7 +44,7 @@ public class App
         Config config = new Config();
         config.setNumWorkers(4);
         //config.setMaxSpoutPending(200);
-        config.setMessageTimeoutSecs(120);
+        config.setMessageTimeoutSecs(7200);
     	String topologyName = "Tweets-Management";
         
         //LocalCluster cluster = new LocalCluster();
