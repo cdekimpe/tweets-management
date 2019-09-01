@@ -25,8 +25,8 @@ import org.apache.storm.hdfs.sync.CountSyncPolicy;
 import org.apache.storm.hdfs.format.FileNameFormat;
 import org.apache.storm.hdfs.format.DefaultFileNameFormat;
 import org.apache.storm.hdfs.format.RecordFormat;
-import org.apache.storm.hdfs.common.Partitioner;
-import org.apache.storm.tuple.Fields;*/
+import org.apache.storm.hdfs.common.Partitioner;*/
+import org.apache.storm.tuple.Fields;
 
 /**
  *
