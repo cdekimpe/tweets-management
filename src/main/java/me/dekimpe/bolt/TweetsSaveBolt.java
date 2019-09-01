@@ -55,6 +55,7 @@ public class TweetsSaveBolt extends BaseWindowedBolt {
         List<Tweet> tweets = new ArrayList<Tweet>();
         for (Tuple input : inputWindow.get()) {
             tweets.add((Tweet) input.getValueByField("tweet"));
+            System.out.println((Tweet) input.getValueByField("tweet"));
         }
         
         /* sync the filesystem after every 1k tuples
