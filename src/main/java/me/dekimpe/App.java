@@ -44,8 +44,8 @@ public class App
         config.setMessageTimeoutSecs(120);
     	String topologyName = "Tweets-Management";
         
-        LocalCluster cluster = new LocalCluster();
-        cluster.submitTopology(topologyName, config, topology);
-        //StormSubmitter.submitTopology(topologyName, config, topology);
+        //LocalCluster cluster = new LocalCluster();
+        //cluster.submitTopology(topologyName, config, topology);
+        StormSubmitter.submitTopology(topologyName, config, topology);
     }
 }
