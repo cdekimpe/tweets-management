@@ -37,7 +37,7 @@ public class App
         /*builder.setBolt("save-tweets", new TweetsSaveBolt().withTumblingWindow(BaseWindowedBolt.Duration.of(1000 * 60)))
                 .shuffleGrouping("tweets-parsed");*/
         
-        builder.setBolt("speed-layer", new TweetsSpeedLayerBolt().withTumblingWindow(BaseWindowedBolt.Count.of(10)))
+        builder.setBolt("speed-layer", new TweetsSpeedLayerBolt().withTumblingWindow(BaseWindowedBolt.Count.of(1000)))
                 .shuffleGrouping("tweets-parsed");
         
         StormTopology topology = builder.createTopology();
