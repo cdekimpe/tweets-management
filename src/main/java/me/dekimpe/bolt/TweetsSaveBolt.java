@@ -17,7 +17,7 @@ import org.apache.storm.topology.OutputFieldsDeclarer;
 import org.apache.storm.topology.base.BaseWindowedBolt;
 import org.apache.storm.tuple.Tuple;
 import org.apache.storm.windowing.TupleWindow;
-import org.apache.storm.hdfs.bolt.AvroGenericRecordBolt;
+/*import org.apache.storm.hdfs.bolt.AvroGenericRecordBolt;
 import org.apache.storm.hdfs.rotation.FileRotationPolicy;
 import org.apache.storm.hdfs.rotation.FileSizeRotationPolicy;
 import org.apache.storm.hdfs.sync.SyncPolicy;
@@ -26,7 +26,7 @@ import org.apache.storm.hdfs.format.FileNameFormat;
 import org.apache.storm.hdfs.format.DefaultFileNameFormat;
 import org.apache.storm.hdfs.format.RecordFormat;
 import org.apache.storm.hdfs.common.Partitioner;
-import org.apache.storm.tuple.Fields;
+import org.apache.storm.tuple.Fields;*/
 
 /**
  *
@@ -57,7 +57,7 @@ public class TweetsSaveBolt extends BaseWindowedBolt {
             tweets.add((Tweet) input.getValueByField("tweet"));
         }
         
-        // sync the filesystem after every 1k tuples
+        /* sync the filesystem after every 1k tuples
         SyncPolicy syncPolicy = new CountSyncPolicy(1000);
 
         // rotate files when they reach 5MB
@@ -84,7 +84,7 @@ public class TweetsSaveBolt extends BaseWindowedBolt {
                 .withFileNameFormat(fileNameFormat)
                 .withRotationPolicy(rotationPolicy)
                 //.withSyncPolicy(syncPolicy)
-                .withPartitioner();
+                .withPartitioner();*/
         
     }
 
