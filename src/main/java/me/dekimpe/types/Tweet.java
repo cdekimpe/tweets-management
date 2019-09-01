@@ -47,11 +47,11 @@ public class Tweet implements Serializable {
     }
     
     public String toString() {
-        String result =  "{\"text\": \"" + text + "\", \"date\": \"" + date + "\", \"hashtags\": [";
+        String result =  "{\"text\": \"" + text + "\", \"date\": \"" + date.getTime() + "\", \"hashtags\": [";
         for (String hashtag : hashtags) {
             result += '"' + hashtag + "\", ";
         }
-        if (hashtags != null)
+        if (hashtags.size() > 0)
             result = result.substring(0, result.length() - 2);
         result += "]}";
         return result;
