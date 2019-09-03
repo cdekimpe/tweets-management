@@ -65,7 +65,8 @@ public class App
                 .withFsUrl("hdfs://hdfs-namenode:9000")
                 .withFileNameFormat(fileNameFormat)
                 .withRotationPolicy(rotationPolicy)
-                .withPartitioner(partitoner);
+                .withPartitioner(partitoner)
+                .withSyncPolicy(syncPolicy);
         
         builder.setBolt("batch-layer", bolt).shuffleGrouping("tweets-parsed");
         
