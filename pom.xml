@@ -104,7 +104,18 @@
                 <artifactId>maven-shade-plugin</artifactId>
                 <version>1.4</version>
                 <configuration>
+                    <!-- Additional configuration. -->
                     <createDependencyReducedPom>true</createDependencyReducedPom>
+                    <filters>
+                        <filter>
+                            <artifact>*:*</artifact>
+                            <excludes>
+                                <exclude>META-INF/*.SF</exclude>
+                                <exclude>META-INF/*.DSA</exclude>
+                                <exclude>META-INF/*.RSA</exclude>
+                            </excludes>
+                        </filter>
+                    </filters>
                 </configuration>
                 <executions>
                     <execution>
