@@ -32,6 +32,12 @@
         <scope>provided</scope>
     </dependency>
     <dependency>
+        <groupId>org.apache.storm</groupId>
+        <artifactId>storm-hdfs</artifactId>
+        <version>1.2.3</version>
+        <scope>provided</scope>
+    </dependency>
+    <dependency>
         <groupId>org.apache.hadoop</groupId>
         <artifactId>hadoop-client</artifactId>
         <version>2.6.1</version>
@@ -93,11 +99,10 @@
 
   <build>
       <plugins>
-          <!--
           <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-shade-plugin</artifactId>
-                <version>3.1.0</version>
+                <version>1.4</version>
                 <configuration>
                     <createDependencyReducedPom>true</createDependencyReducedPom>
                 </configuration>
@@ -120,7 +125,7 @@
                     </execution>
                 </executions>
           </plugin>
-          -->
+          <!--
           <plugin>
               <artifactId>maven-assembly-plugin</artifactId>
               <configuration>
@@ -142,7 +147,8 @@
                       </goals>
                   </execution>
               </executions>
-          </plugin>       
+          </plugin>
+          -->       
           <plugin>
               <groupId>org.apache.maven.plugins</groupId>
               <artifactId>maven-compiler-plugin</artifactId>

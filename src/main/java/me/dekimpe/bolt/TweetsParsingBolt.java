@@ -20,6 +20,7 @@ import org.apache.storm.tuple.Fields;
 import org.apache.storm.tuple.Tuple;
 import org.apache.storm.tuple.Values;
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 /**
@@ -47,7 +48,7 @@ public class TweetsParsingBolt extends BaseRichBolt  {
     }
     
     // Input example : {"timestamp": 1563961571, "eur": 8734.6145}
-    private void process(Tuple input) throws ParseException {
+    private void process(Tuple input) throws ParseException, JSONException {
         JSONObject obj = new org.json.JSONObject(input.getStringByField("value"));
         
         // Getting text from the tweet, no parsing needed
