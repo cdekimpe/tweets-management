@@ -1,6 +1,6 @@
 package me.dekimpe.types;
 
-import java.io.Serializable;
+import org.apache.storm.hdfs.avro.GenericAvroSerializer;
 import java.util.Date;
 import java.util.List;
 
@@ -14,7 +14,7 @@ import java.util.List;
  *
  * @author Coreuh
  */
-public class Tweet implements Serializable {
+public class Tweet extends GenericAvroSerializer {
     
     private Date date;
     private String text;
