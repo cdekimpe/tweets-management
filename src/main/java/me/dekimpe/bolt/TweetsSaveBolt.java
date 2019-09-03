@@ -17,6 +17,7 @@ import org.apache.storm.topology.OutputFieldsDeclarer;
 import org.apache.storm.topology.base.BaseWindowedBolt;
 import org.apache.storm.tuple.Tuple;
 import org.apache.storm.windowing.TupleWindow;
+import org.apache.storm.hdfs.format.RecordFormat;
 /*import org.apache.storm.hdfs.bolt.AvroGenericRecordBolt;
 import org.apache.storm.hdfs.rotation.FileRotationPolicy;
 import org.apache.storm.hdfs.rotation.FileSizeRotationPolicy;
