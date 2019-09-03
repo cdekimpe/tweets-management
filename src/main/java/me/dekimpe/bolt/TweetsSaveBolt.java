@@ -11,13 +11,21 @@ import java.util.List;
 import java.util.Map;
 import me.dekimpe.types.Tweet;
 import org.apache.hadoop.fs.Path;
+import org.apache.storm.hdfs.bolt.AvroGenericRecordBolt;
+import org.apache.storm.hdfs.bolt.format.DefaultFileNameFormat;
+import org.apache.storm.hdfs.bolt.format.FileNameFormat;
+import org.apache.storm.hdfs.bolt.rotation.FileRotationPolicy;
+import org.apache.storm.hdfs.bolt.rotation.FileSizeRotationPolicy;
+import org.apache.storm.hdfs.bolt.sync.CountSyncPolicy;
+import org.apache.storm.hdfs.bolt.sync.SyncPolicy;
+import org.apache.storm.hdfs.common.Partitioner;
 import org.apache.storm.task.OutputCollector;
 import org.apache.storm.task.TopologyContext;
 import org.apache.storm.topology.OutputFieldsDeclarer;
 import org.apache.storm.topology.base.BaseWindowedBolt;
 import org.apache.storm.tuple.Tuple;
 import org.apache.storm.windowing.TupleWindow;
-import org.apache.storm.hdfs.format.RecordFormat;
+import org.apache.storm.hdfs.common.Partitioner;
 /*import org.apache.storm.hdfs.bolt.AvroGenericRecordBolt;
 import org.apache.storm.hdfs.rotation.FileRotationPolicy;
 import org.apache.storm.hdfs.rotation.FileSizeRotationPolicy;
@@ -59,7 +67,7 @@ public class TweetsSaveBolt extends BaseWindowedBolt {
             System.out.println((Tweet) input.getValueByField("tweet"));
         }
         
-        /* sync the filesystem after every 1k tuples
+        // sync the filesystem after every 1k tuples
         SyncPolicy syncPolicy = new CountSyncPolicy(1000);
 
         // rotate files when they reach 5MB
@@ -85,8 +93,8 @@ public class TweetsSaveBolt extends BaseWindowedBolt {
                 .withFsUrl("hdfs://hdfs-namenode:9000")
                 .withFileNameFormat(fileNameFormat)
                 .withRotationPolicy(rotationPolicy)
+                .withPartitioner(partitoner);
                 //.withSyncPolicy(syncPolicy)
-                .withPartitioner();*/
         
     }
 
