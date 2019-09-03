@@ -47,7 +47,7 @@ public class App
         builder.setBolt("speed-layer", new TweetsSpeedLayerBolt().withTumblingWindow(BaseWindowedBolt.Count.of(1000)))
                 .shuffleGrouping("tweets-parsed");
         
-        SyncPolicy syncPolicy = new CountSyncPolicy(1000);
+        SyncPolicy syncPolicy = new CountSyncPolicy(100);
         FileRotationPolicy rotationPolicy = new FileSizeRotationPolicy(64.0f, FileSizeRotationPolicy.Units.MB);
         FileNameFormat fileNameFormat = new DefaultFileNameFormat()
                 .withExtension(".avro")
