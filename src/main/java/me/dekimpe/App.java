@@ -16,6 +16,7 @@ import org.apache.storm.topology.TopologyBuilder;
 import org.apache.storm.topology.base.BaseWindowedBolt;
 import org.apache.storm.tuple.Tuple;
 import org.apache.hadoop.fs.Path;
+import org.apache.storm.hdfs.avro.AvroUtils;
 import org.apache.storm.hdfs.bolt.AvroGenericRecordBolt;
 import org.apache.storm.hdfs.bolt.format.DefaultFileNameFormat;
 import org.apache.storm.hdfs.bolt.format.FileNameFormat;
@@ -77,6 +78,7 @@ public class App
         config.setMessageTimeoutSecs(7200);
     	String topologyName = "Tweets-Management";
         
+        AvroUtils.addAvroKryoSerializations(config);        
         StormSubmitter.submitTopology(topologyName, config, topology);
     }
 }
