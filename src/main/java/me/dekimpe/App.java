@@ -1,10 +1,10 @@
 package me.dekimpe;
 
 import me.dekimpe.bolt.*;
+import me.dekimpe.types.Tweet;
 
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.storm.Config;
-import org.apache.storm.LocalCluster;
 import org.apache.storm.StormSubmitter;
 import org.apache.storm.generated.AlreadyAliveException;
 import org.apache.storm.generated.AuthorizationException;
@@ -14,6 +14,16 @@ import org.apache.storm.kafka.spout.KafkaSpout;
 import org.apache.storm.kafka.spout.KafkaSpoutConfig;
 import org.apache.storm.topology.TopologyBuilder;
 import org.apache.storm.topology.base.BaseWindowedBolt;
+import org.apache.storm.tuple.Tuple;
+import org.apache.hadoop.fs.Path;
+import org.apache.storm.hdfs.bolt.AvroGenericRecordBolt;
+import org.apache.storm.hdfs.bolt.format.DefaultFileNameFormat;
+import org.apache.storm.hdfs.bolt.format.FileNameFormat;
+import org.apache.storm.hdfs.bolt.rotation.FileRotationPolicy;
+import org.apache.storm.hdfs.bolt.rotation.FileSizeRotationPolicy;
+import org.apache.storm.hdfs.bolt.sync.CountSyncPolicy;
+import org.apache.storm.hdfs.bolt.sync.SyncPolicy;
+import org.apache.storm.hdfs.common.Partitioner;
 
 /**
  * Hello world!
@@ -34,11 +44,30 @@ public class App
         builder.setBolt("tweets-parsed", new TweetsParsingBolt())
                 .shuffleGrouping("tweets-spout");
         
-        /*builder.setBolt("save-tweets", new TweetsSaveBolt().withTumblingWindow(BaseWindowedBolt.Duration.of(1000 * 60)))
-                .shuffleGrouping("tweets-parsed");*/
-        
         builder.setBolt("speed-layer", new TweetsSpeedLayerBolt().withTumblingWindow(BaseWindowedBolt.Count.of(1000)))
                 .shuffleGrouping("tweets-parsed");
+        
+        SyncPolicy syncPolicy = new CountSyncPolicy(1000);
+        FileRotationPolicy rotationPolicy = new FileSizeRotationPolicy(64.0f, FileSizeRotationPolicy.Units.MB);
+        FileNameFormat fileNameFormat = new DefaultFileNameFormat()
+                .withExtension(".avro")
+                .withPath("/tweets/");      
+        Partitioner partitoner = new Partitioner() {
+            public String getPartitionPath(Tuple tuple) {
+                Tweet tweet = (Tweet) tuple.getValueByField("tweet");
+                int year = tweet.getDate().getYear();
+                int month = tweet.getDate().getMonth();
+                int day = tweet.getDate().getDay();
+                int hour = tweet.getDate().getHours();
+                return Path.SEPARATOR + year + Path.SEPARATOR + month + Path.SEPARATOR + day + Path.SEPARATOR + hour;
+        }};
+        AvroGenericRecordBolt bolt = new AvroGenericRecordBolt()
+                .withFsUrl("hdfs://hdfs-namenode:9000")
+                .withFileNameFormat(fileNameFormat)
+                .withRotationPolicy(rotationPolicy)
+                .withPartitioner(partitoner);
+        
+        builder.setBolt("batch-layer", bolt).shuffleGrouping("tweets-parsed");
         
         StormTopology topology = builder.createTopology();
         Config config = new Config();
@@ -47,8 +76,6 @@ public class App
         config.setMessageTimeoutSecs(7200);
     	String topologyName = "Tweets-Management";
         
-        //LocalCluster cluster = new LocalCluster();
-        //cluster.submitTopology(topologyName, config, topology);
         StormSubmitter.submitTopology(topologyName, config, topology);
     }
 }
