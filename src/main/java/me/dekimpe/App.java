@@ -61,11 +61,11 @@ public class App
                 .withPath("/tweets/");      
         Partitioner partitoner = new Partitioner() {
             public String getPartitionPath(Tuple tuple) {
-                Tweet tweet = (Tweet) tuple.getValueByField("genericRecordTweet");
-                int year = tweet.getDate().getYear();
-                int month = tweet.getDate().getMonth();
-                int day = tweet.getDate().getDay();
-                int hour = tweet.getDate().getHours();
+                Date date = (Date) tuple.getValueByField("date");
+                int year = date.getYear();
+                int month = date.getMonth();
+                int day = date.getDay();
+                int hour = date.getHours();
                 return Path.SEPARATOR + year + Path.SEPARATOR + month + Path.SEPARATOR + day + Path.SEPARATOR + hour;
         }};
         AvroGenericRecordBolt bolt = new AvroGenericRecordBolt()

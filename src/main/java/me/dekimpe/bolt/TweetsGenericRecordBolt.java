@@ -29,7 +29,7 @@ public class TweetsGenericRecordBolt extends BaseRichBolt {
 
     @Override
     public void declareOutputFields(OutputFieldsDeclarer declarer) {
-        declarer.declare(new Fields("genericRecordTweet"));
+        declarer.declare(new Fields("date", "text", "hashtags"));
     }
 
     @Override
@@ -50,12 +50,7 @@ public class TweetsGenericRecordBolt extends BaseRichBolt {
     
     private void process(Tuple input) {
         Tweet tweet = (Tweet) input.getValueByField("tweet");
-        Schema schema = ReflectData.get().getSchema(tweet.getClass());
-        GenericRecord avroRecord = new GenericData.Record(schema);
-        avroRecord.put("date", tweet.getDate());
-        avroRecord.put("text", tweet.getText());
-        avroRecord.put("hashtags", tweet.getHashtags());
-        outputCollector.emit(new Values(avroRecord));
+        outputCollector.emit(new Values(tweet.getDate(), tweet.getText(), tweet.getHashtags()));
     }
     
 }
