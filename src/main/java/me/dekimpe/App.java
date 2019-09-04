@@ -80,7 +80,7 @@ public class App
         StormTopology topology = builder.createTopology();
         Config config = new Config();
         config.setNumWorkers(4);
-        //config.registerSerialization(Tweet.class);
+        config.registerSerialization(Tweet.class);
         //config.setMaxSpoutPending(200);
         config.setMessageTimeoutSecs(7200);
         AvroUtils.addAvroKryoSerializations(config);
