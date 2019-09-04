@@ -61,7 +61,7 @@ public class App
                 .withPath("/tweets/");      
         Partitioner partitoner = new Partitioner() {
             public String getPartitionPath(Tuple tuple) {
-                Tweet tweet = (Tweet) tuple.getValueByField("tweet");
+                Tweet tweet = (Tweet) tuple.getValueByField("genericRecordTweet");
                 int year = tweet.getDate().getYear();
                 int month = tweet.getDate().getMonth();
                 int day = tweet.getDate().getDay();
