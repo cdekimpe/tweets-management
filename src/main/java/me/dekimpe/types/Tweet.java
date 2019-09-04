@@ -17,7 +17,7 @@ import org.apache.storm.hdfs.avro.AbstractAvroSerializer;
  *
  * @author Coreuh
  */
-public class Tweet implements Serializable {
+public class Tweet  {
     
     private Date date;
     private String text;
@@ -61,3 +61,4 @@ public class Tweet implements Serializable {
         return result;
     }
 }
+
