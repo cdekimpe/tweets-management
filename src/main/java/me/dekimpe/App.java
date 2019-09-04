@@ -48,15 +48,15 @@ public class App
         builder.setBolt("tweets-parsed", new TweetsParsingBolt())
                 .shuffleGrouping("tweets-spout");
         
-        Tweet tweet = new Tweet();
+        /*Tweet tweet = new Tweet();
         List<String> hashtags = new ArrayList<String>();
         hashtags.add("test1");
         hashtags.add("test2");
         tweet.setDate(new Date());
         tweet.setText("Test for the Avro Schema");
-        tweet.setHashtags(hashtags);
+        tweet.setHashtags(hashtags);*/
         
-        /*builder.setBolt("speed-layer", new TweetsSpeedLayerBolt().withTumblingWindow(BaseWindowedBolt.Count.of(1000)))
+        builder.setBolt("speed-layer", new TweetsSpeedLayerBolt().withTumblingWindow(BaseWindowedBolt.Count.of(1000)))
                 .shuffleGrouping("tweets-parsed");
         
         SyncPolicy syncPolicy = new CountSyncPolicy(100);
@@ -80,7 +80,7 @@ public class App
                 .withPartitioner(partitoner)
                 .withSyncPolicy(syncPolicy);
         
-        builder.setBolt("batch-layer", bolt).shuffleGrouping("tweets-parsed");*/
+        builder.setBolt("batch-layer", bolt).shuffleGrouping("tweets-parsed");
         
         StormTopology topology = builder.createTopology();
         Config config = new Config();
