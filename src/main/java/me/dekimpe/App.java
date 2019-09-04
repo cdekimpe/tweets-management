@@ -48,15 +48,10 @@ public class App
         builder.setBolt("tweets-parsed", new TweetsParsingBolt())
                 .shuffleGrouping("tweets-spout");
         
-        /*Tweet tweet = new Tweet();
-        List<String> hashtags = new ArrayList<String>();
-        hashtags.add("test1");
-        hashtags.add("test2");
-        tweet.setDate(new Date());
-        tweet.setText("Test for the Avro Schema");
-        tweet.setHashtags(hashtags);*/
-        
         builder.setBolt("speed-layer", new TweetsSpeedLayerBolt().withTumblingWindow(BaseWindowedBolt.Count.of(1000)))
+                .shuffleGrouping("tweets-parsed");
+        
+        builder.setBolt("tweets-avro-records", new TweetsGenericRecordBolt())
                 .shuffleGrouping("tweets-parsed");
         
         SyncPolicy syncPolicy = new CountSyncPolicy(100);
@@ -80,18 +75,18 @@ public class App
                 .withPartitioner(partitoner)
                 .withSyncPolicy(syncPolicy);
         
-        builder.setBolt("batch-layer", bolt).shuffleGrouping("tweets-parsed");
+        builder.setBolt("batch-layer", bolt).shuffleGrouping("tweets-avro-records");
         
         StormTopology topology = builder.createTopology();
         Config config = new Config();
         config.setNumWorkers(4);
-        config.registerSerialization(Tweet.class);
+        //config.registerSerialization(Tweet.class);
         //config.setMaxSpoutPending(200);
         config.setMessageTimeoutSecs(7200);
         AvroUtils.addAvroKryoSerializations(config);
     	String topologyName = "Tweets-Management";
         
-        AvroUtils.addAvroKryoSerializations(config);        
+        AvroUtils.addAvroKryoSerializations(config);
         StormSubmitter.submitTopology(topologyName, config, topology);
     }
 }
