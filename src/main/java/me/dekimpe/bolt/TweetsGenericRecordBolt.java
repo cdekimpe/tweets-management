@@ -50,7 +50,7 @@ public class TweetsGenericRecordBolt extends BaseRichBolt {
     
     private void process(Tuple input) {
         Tweet tweet = (Tweet) input.getValueByField("tweet");
-        outputCollector.emit(new Values(tweet.getDate(), tweet.getText(), tweet.getHashtags()));
+        outputCollector.emit(new Values(tweet.getDate().getTime(), tweet.getText(), tweet.getHashtags()));
     }
     
 }
