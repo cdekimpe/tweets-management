@@ -4,6 +4,8 @@ package me.dekimpe.types;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
+import org.apache.avro.Schema;
+import org.apache.storm.hdfs.avro.AbstractAvroSerializer;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -47,6 +49,7 @@ public class Tweet implements Serializable {
         this.hashtags = hashtags;
     }
     
+    @Override
     public String toString() {
         String result =  "{\"text\": \"" + text + "\", \"date\": \"" + date.getTime() + "\", \"hashtags\": [";
         for (String hashtag : hashtags) {
@@ -57,5 +60,4 @@ public class Tweet implements Serializable {
         result += "]}";
         return result;
     }
-    
 }
