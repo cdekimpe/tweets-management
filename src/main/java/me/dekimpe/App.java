@@ -21,6 +21,7 @@ import org.apache.storm.tuple.Tuple;
 import org.apache.hadoop.fs.Path;
 import org.apache.storm.hdfs.avro.AvroUtils;
 import org.apache.storm.hdfs.bolt.AvroGenericRecordBolt;
+import org.apache.storm.hdfs.bolt.HdfsBolt;
 import org.apache.storm.hdfs.bolt.format.DefaultFileNameFormat;
 import org.apache.storm.hdfs.bolt.format.FileNameFormat;
 import org.apache.storm.hdfs.bolt.rotation.FileRotationPolicy;
@@ -68,14 +69,14 @@ public class App
                 int hour = date.getHours();
                 return Path.SEPARATOR + year + Path.SEPARATOR + month + Path.SEPARATOR + day + Path.SEPARATOR + hour;
         }};
-        AvroGenericRecordBolt bolt = new AvroGenericRecordBolt()
+        HdfsBolt bolt = new HdfsBolt()
                 .withFsUrl("hdfs://hdfs-namenode:9000")
                 .withFileNameFormat(fileNameFormat)
                 .withRotationPolicy(rotationPolicy)
                 .withPartitioner(partitoner)
                 .withSyncPolicy(syncPolicy);
         
-        builder.setBolt("batch-layer", bolt).shuffleGrouping("tweets-avro-records");
+        builder.setBolt("batch-layer", bolt).shuffleGrouping("tweets-parsed");
         
         StormTopology topology = builder.createTopology();
         Config config = new Config();
