@@ -50,7 +50,7 @@ public class App
         builder.setBolt("tweets-parsed", new TweetsParsingBolt())
                 .shuffleGrouping("tweets-spout");
         
-        builder.setBolt("speed-layer", new TweetsSpeedLayerBolt().withTumblingWindow(BaseWindowedBolt.Count.of(1000)))
+        /*builder.setBolt("speed-layer", new TweetsSpeedLayerBolt().withTumblingWindow(BaseWindowedBolt.Count.of(1000)))
                 .shuffleGrouping("tweets-parsed");
         
         /*builder.setBolt("tweets-avro-records", new TweetsGenericRecordBolt())
