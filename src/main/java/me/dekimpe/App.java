@@ -1,6 +1,7 @@
 package me.dekimpe;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import me.dekimpe.bolt.*;
@@ -52,8 +53,8 @@ public class App
         builder.setBolt("speed-layer", new TweetsSpeedLayerBolt().withTumblingWindow(BaseWindowedBolt.Count.of(1000)))
                 .shuffleGrouping("tweets-parsed");
         
-        builder.setBolt("tweets-avro-records", new TweetsGenericRecordBolt())
-                .shuffleGrouping("tweets-parsed");
+        /*builder.setBolt("tweets-avro-records", new TweetsGenericRecordBolt())
+                .shuffleGrouping("tweets-parsed");*/
         
         SyncPolicy syncPolicy = new CountSyncPolicy(100);
         FileRotationPolicy rotationPolicy = new FileSizeRotationPolicy(64.0f, FileSizeRotationPolicy.Units.MB);
@@ -63,11 +64,13 @@ public class App
         Partitioner partitoner = new Partitioner() {
             public String getPartitionPath(Tuple tuple) {
                 Tweet tweet = (Tweet) tuple.getValueByField("tweet");
+                Calendar calendar = Calendar.getInstance();
                 Date date = tweet.getDate();
-                int year = date.getYear();
-                int month = date.getMonth();
-                int day = date.getDay();
-                int hour = date.getHours();
+                calendar.setTime(date);
+                int year = calendar.get(Calendar.YEAR);
+                int month = calendar.get(Calendar.MONTH);
+                int day = calendar.get(Calendar.DAY_OF_MONTH);
+                int hour = calendar.get(Calendar.HOUR_OF_DAY);
                 return Path.SEPARATOR + year + Path.SEPARATOR + month + Path.SEPARATOR + day + Path.SEPARATOR + hour;
         }};
         HdfsBolt bolt = new HdfsBolt()
