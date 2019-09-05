@@ -29,6 +29,7 @@ import org.apache.storm.hdfs.bolt.rotation.FileSizeRotationPolicy;
 import org.apache.storm.hdfs.bolt.sync.CountSyncPolicy;
 import org.apache.storm.hdfs.bolt.sync.SyncPolicy;
 import org.apache.storm.hdfs.common.Partitioner;
+import org.apache.storm.topology.base.BaseWindowedBolt;
 
 /**
  * Hello world!
