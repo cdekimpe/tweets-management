@@ -78,7 +78,7 @@ public class App
         }};
         HdfsBolt bolt = new HdfsBolt()
                 .withFsUrl("hdfs://hdfs-namenode:9000")
-                .withRecordFormat(format);
+                .withRecordFormat(format)
                 .withFileNameFormat(fileNameFormat)
                 .withRotationPolicy(rotationPolicy)
                 .withPartitioner(partitoner)
