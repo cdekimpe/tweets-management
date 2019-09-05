@@ -59,7 +59,7 @@ public class App
                 .shuffleGrouping("tweets-parsed");*/
         
         RecordFormat format = new DelimitedRecordFormat().withFieldDelimiter("|");
-        SyncPolicy syncPolicy = new CountSyncPolicy(100);
+        SyncPolicy syncPolicy = new CountSyncPolicy(1000);
         FileRotationPolicy rotationPolicy = new FileSizeRotationPolicy(64.0f, FileSizeRotationPolicy.Units.MB);
         FileNameFormat fileNameFormat = new DefaultFileNameFormat()
                 .withExtension(".avro")
