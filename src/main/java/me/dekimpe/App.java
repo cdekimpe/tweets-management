@@ -1,9 +1,7 @@
 package me.dekimpe;
 
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.List;
 import me.dekimpe.bolt.*;
 import me.dekimpe.types.Tweet;
 
@@ -17,7 +15,6 @@ import org.apache.storm.generated.StormTopology;
 import org.apache.storm.kafka.spout.KafkaSpout;
 import org.apache.storm.kafka.spout.KafkaSpoutConfig;
 import org.apache.storm.topology.TopologyBuilder;
-import org.apache.storm.topology.base.BaseWindowedBolt;
 import org.apache.storm.tuple.Tuple;
 import org.apache.hadoop.fs.Path;
 import org.apache.storm.hdfs.avro.AvroUtils;
