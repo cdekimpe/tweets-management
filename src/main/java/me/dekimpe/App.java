@@ -24,6 +24,8 @@ import org.apache.storm.hdfs.avro.AvroUtils;
 import org.apache.storm.hdfs.bolt.AvroGenericRecordBolt;
 import org.apache.storm.hdfs.bolt.HdfsBolt;
 import org.apache.storm.hdfs.bolt.format.DefaultFileNameFormat;
+import org.apache.storm.hdfs.bolt.format.DelimitedRecordFormat;
+import org.apache.storm.hdfs.bolt.format.RecordFormat;
 import org.apache.storm.hdfs.bolt.format.FileNameFormat;
 import org.apache.storm.hdfs.bolt.rotation.FileRotationPolicy;
 import org.apache.storm.hdfs.bolt.rotation.FileSizeRotationPolicy;
@@ -56,6 +58,7 @@ public class App
         /*builder.setBolt("tweets-avro-records", new TweetsGenericRecordBolt())
                 .shuffleGrouping("tweets-parsed");*/
         
+        RecordFormat format = new DelimitedRecordFormat().withFieldDelimiter("|");
         SyncPolicy syncPolicy = new CountSyncPolicy(100);
         FileRotationPolicy rotationPolicy = new FileSizeRotationPolicy(64.0f, FileSizeRotationPolicy.Units.MB);
         FileNameFormat fileNameFormat = new DefaultFileNameFormat()
