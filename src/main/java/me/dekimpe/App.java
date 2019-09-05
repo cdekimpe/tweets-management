@@ -55,7 +55,7 @@ public class App
         /*builder.setBolt("tweets-avro-records", new TweetsGenericRecordBolt())
                 .shuffleGrouping("tweets-parsed");*/
         
-        RecordFormat format = new DelimitedRecordFormat().withFieldDelimiter("|");
+        RecordFormat format = new DelimitedRecordFormat().withFieldDelimiter("|").withRecordDelimiter("\n#####\n");
         SyncPolicy syncPolicy = new CountSyncPolicy(1000);
         FileRotationPolicy rotationPolicy = new FileSizeRotationPolicy(64.0f, FileSizeRotationPolicy.Units.MB);
         FileNameFormat fileNameFormat = new DefaultFileNameFormat()
