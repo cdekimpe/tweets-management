@@ -49,7 +49,7 @@ public class App
         builder.setBolt("tweets-parsed", new TweetsParsingBolt())
                 .shuffleGrouping("tweets-spout");
         
-        builder.setBolt("speed-layer", new TweetsSpeedLayerBolt().withTumblingWindow(BaseWindowedBolt.Count.of(1000)))
+        builder.setBolt("speed-layer", new TweetsSpeedLayerBolt().withTumblingWindow(BaseWindowedBolt.Count.of(100)))
                 .shuffleGrouping("tweets-parsed");
         
         RecordFormat format = new DelimitedRecordFormat().withFieldDelimiter("|").withRecordDelimiter("\n#####\n");
