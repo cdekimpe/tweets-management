@@ -63,7 +63,7 @@ public class TweetsAvroSpout extends BaseRichSpout {
                 ConsumerRecords<String, Tweet> records = consumer.poll(100);
                 for (ConsumerRecord<String, Tweet> record : records) {
                     Tweet tweet = record.value();
-                    outputCollector.emit(new Values());
+                    outputCollector.emit(new Values(tweet));
                 }
             }
         } catch (UnknownHostException e) {
