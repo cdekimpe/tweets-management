@@ -12,7 +12,8 @@ import java.net.UnknownHostException;
 import java.util.Collections;
 import java.util.Map;
 import java.util.Properties;
-import me.dekimpe.values.Tweet;
+import me.dekimpe.avro.value.Tweet;
+import me.dekimpe.avro.key.Tweet;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.clients.consumer.ConsumerRecords;
@@ -57,7 +58,7 @@ public class TweetsAvroSpout extends BaseRichSpout {
             config.put(KafkaAvroDeserializerConfig.SPECIFIC_AVRO_READER_CONFIG, true);
             config.put(AbstractKafkaAvroSerDeConfig.SCHEMA_REGISTRY_URL_CONFIG, "http://localhost:8081");
             consumer = new KafkaConsumer<>(config);
-            consumer.subscribe(Collections.singletonList("tweets-test"));
+            consumer.subscribe(Collections.singletonList("tweet"));
             while (true) {
                 ConsumerRecords<String, Tweet> records = consumer.poll(100);
                 for (ConsumerRecord<String, Tweet> record : records) {
