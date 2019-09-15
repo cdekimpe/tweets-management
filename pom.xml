@@ -80,7 +80,7 @@
                           <goal>schema</goal>
                       </goals>
                       <configuration>
-                          <sourceDirectory>${project.basedir}/src/main/java/me/dekimpe/types</sourceDirectory>
+                          <sourceDirectory>${project.basedir}/src/main/avro/</sourceDirectory>
                           <outputDirectory>${project.basedir}/src/main/java/</outputDirectory>
                       </configuration>
                   </execution>
@@ -130,8 +130,7 @@
                   <source>1.8</source>
                   <target>1.8</target>
               </configuration>
-          </plugin>
-          
+          </plugin>          
       </plugins>
   </build>
 </project>

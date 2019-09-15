@@ -22,7 +22,7 @@ import org.elasticsearch.common.transport.InetSocketTransportAddress;
 import org.elasticsearch.common.xcontent.XContentType;
 import org.elasticsearch.transport.client.PreBuiltTransportClient;
 import me.dekimpe.config.ElasticSearch;
-import me.dekimpe.types.Tweet;
+import me.dekimpe.values.Tweet;
 
 /**
  *
