@@ -1,10 +1,7 @@
 package me.dekimpe;
 
-import java.util.Calendar;
-import java.util.Date;
-import me.dekimpe.bolt.*;
-import me.dekimpe.types.Tweet;
-
+import me.dekimpe.bolt.TweetsParsingBolt;
+import me.dekimpe.bolt.TweetsSpeedLayerBolt;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.storm.Config;
 import org.apache.storm.StormSubmitter;
@@ -15,19 +12,6 @@ import org.apache.storm.generated.StormTopology;
 import org.apache.storm.kafka.spout.KafkaSpout;
 import org.apache.storm.kafka.spout.KafkaSpoutConfig;
 import org.apache.storm.topology.TopologyBuilder;
-import org.apache.storm.tuple.Tuple;
-import org.apache.hadoop.fs.Path;
-import org.apache.storm.hdfs.avro.AvroUtils;
-import org.apache.storm.hdfs.bolt.HdfsBolt;
-import org.apache.storm.hdfs.bolt.format.DefaultFileNameFormat;
-import org.apache.storm.hdfs.bolt.format.DelimitedRecordFormat;
-import org.apache.storm.hdfs.bolt.format.RecordFormat;
-import org.apache.storm.hdfs.bolt.format.FileNameFormat;
-import org.apache.storm.hdfs.bolt.rotation.FileRotationPolicy;
-import org.apache.storm.hdfs.bolt.rotation.FileSizeRotationPolicy;
-import org.apache.storm.hdfs.bolt.sync.CountSyncPolicy;
-import org.apache.storm.hdfs.bolt.sync.SyncPolicy;
-import org.apache.storm.hdfs.common.Partitioner;
 import org.apache.storm.topology.base.BaseWindowedBolt;
 
 /**
@@ -41,8 +25,8 @@ public class App
     {
         TopologyBuilder builder = new TopologyBuilder();
         
-        KafkaSpoutConfig.Builder<String, String> spoutConfigBuilder = KafkaSpoutConfig.builder("kafka1:9092", "tests")
-                .setProp(ConsumerConfig.GROUP_ID_CONFIG, "batch-layer");
+        KafkaSpoutConfig.Builder<String, String> spoutConfigBuilder = KafkaSpoutConfig.builder("confluent-kakfa:9092", "tweets")
+                .setProp(ConsumerConfig.GROUP_ID_CONFIG, "speed-layer");
     	KafkaSpoutConfig<String, String> spoutConfig = spoutConfigBuilder.build();
     	builder.setSpout("tweets-spout", new KafkaSpout<String, String>(spoutConfig));
         
@@ -52,43 +36,12 @@ public class App
         builder.setBolt("speed-layer", new TweetsSpeedLayerBolt().withTumblingWindow(BaseWindowedBolt.Count.of(100)))
                 .shuffleGrouping("tweets-parsed");
         
-        RecordFormat format = new DelimitedRecordFormat().withFieldDelimiter("|").withRecordDelimiter("\n#####\n");
-        SyncPolicy syncPolicy = new CountSyncPolicy(1000);
-        FileRotationPolicy rotationPolicy = new FileSizeRotationPolicy(64.0f, FileSizeRotationPolicy.Units.MB);
-        FileNameFormat fileNameFormat = new DefaultFileNameFormat()
-                .withExtension(".avro")
-                .withPath("/tweets/");      
-        Partitioner partitoner = new Partitioner() {
-            public String getPartitionPath(Tuple tuple) {
-                Tweet tweet = (Tweet) tuple.getValueByField("tweet");
-                Calendar calendar = Calendar.getInstance();
-                Date date = tweet.getDate();
-                calendar.setTime(date);
-                int year = calendar.get(Calendar.YEAR);
-                int month = calendar.get(Calendar.MONTH);
-                int day = calendar.get(Calendar.DAY_OF_MONTH);
-                int hour = calendar.get(Calendar.HOUR_OF_DAY);
-                return Path.SEPARATOR + year + Path.SEPARATOR + month + Path.SEPARATOR + day + Path.SEPARATOR + hour;
-        }};
-        HdfsBolt bolt = new HdfsBolt()
-                .withFsUrl("hdfs://hdfs-namenode:9000")
-                .withRecordFormat(format)
-                .withFileNameFormat(fileNameFormat)
-                .withRotationPolicy(rotationPolicy)
-                .withPartitioner(partitoner)
-                .withSyncPolicy(syncPolicy);
-        
-        builder.setBolt("batch-layer", bolt).shuffleGrouping("tweets-parsed");
-        
         StormTopology topology = builder.createTopology();
         Config config = new Config();
         config.setNumWorkers(4);
-        config.registerSerialization(Tweet.class);
         config.setMessageTimeoutSecs(7200);
-        AvroUtils.addAvroKryoSerializations(config);
     	String topologyName = "Tweets-Management";
-        
-        AvroUtils.addAvroKryoSerializations(config);
+
         StormSubmitter.submitTopology(topologyName, config, topology);
     }
 }
