@@ -52,7 +52,6 @@ public class TweetsAvroSpout extends BaseRichSpout {
             config.put("bootstrap.servers", "confluent-kafka:9092");
             config.put(ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG, "true");
             config.put(ConsumerConfig.AUTO_COMMIT_INTERVAL_MS_CONFIG, "1000");
-            config.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
             config.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, KafkaAvroDeserializer.class);
             config.put(KafkaAvroDeserializerConfig.SPECIFIC_AVRO_READER_CONFIG, true);
             config.put(AbstractKafkaAvroSerDeConfig.SCHEMA_REGISTRY_URL_CONFIG, "http://localhost:8081");
