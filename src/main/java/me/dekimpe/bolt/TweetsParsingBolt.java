@@ -63,15 +63,10 @@ public class TweetsParsingBolt extends BaseRichBolt  {
             }
         }
         
-        // Parsing date string from Twitter to Date Java Object
-        String dateString = (String) obj.get("date");
-        SimpleDateFormat sdf = new SimpleDateFormat("EEE MMM dd HH:mm:ss Z yyyy");
-        Date date = sdf.parse(dateString);
-        
         // Setting all the elements to the Tweet Type Object
         Tweet tweet = new Tweet();
         tweet.setText(text);
-        tweet.setDate(date);
+        tweet.setDate((String) obj.get("date"));
         tweet.setHashtags(hashtags);
 
         outputCollector.emit(new Values(tweet));

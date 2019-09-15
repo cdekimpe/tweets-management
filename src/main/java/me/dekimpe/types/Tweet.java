@@ -2,10 +2,10 @@ package me.dekimpe.types;
 
 //import org.apache.storm.hdfs.avro.GenericAvroSerializer;
 import java.io.Serializable;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
-import org.apache.avro.Schema;
-import org.apache.storm.hdfs.avro.AbstractAvroSerializer;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -19,18 +19,32 @@ import org.apache.storm.hdfs.avro.AbstractAvroSerializer;
  */
 public class Tweet implements Serializable {
     
-    private Date date;
+    private String date;
     private String text;
+    private int timestamp;
     private List<String> hashtags;
     
     public Tweet() {}
 
-    public Date getDate() {
+    public String getDate() {
         return date;
     }
 
-    public void setDate(Date date) {
+    public void setDate(String date) {
         this.date = date;
+    }
+    
+    public void setTimestamp(int timestamp) {
+        this.timestamp = timestamp;
+    }
+    
+    public int getTimestamp() {
+        return timestamp;
+    }
+    
+    public Date getDateObj() throws ParseException {
+        SimpleDateFormat sdf = new SimpleDateFormat("EEE MMM dd HH:mm:ss Z yyyy");
+        return sdf.parse(date);
     }
 
     public String getText() {
@@ -51,7 +65,7 @@ public class Tweet implements Serializable {
     
     @Override
     public String toString() {
-        String result =  "{\"text\": \"" + text + "\", \"date\": \"" + date.getTime() + "\", \"hashtags\": [";
+        String result =  "{\"text\": \"" + text + "\", \"date\": \"" + timestamp + "\", \"hashtags\": [";
         for (String hashtag : hashtags) {
             result += '"' + hashtag + "\", ";
         }
