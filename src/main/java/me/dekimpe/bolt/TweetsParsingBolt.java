@@ -11,7 +11,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
-import me.dekimpe.types.Tweet;
 import org.apache.storm.task.OutputCollector;
 import org.apache.storm.task.TopologyContext;
 import org.apache.storm.topology.OutputFieldsDeclarer;
@@ -63,14 +62,14 @@ public class TweetsParsingBolt extends BaseRichBolt  {
             }
         }
         
-        // Setting all the elements to the Tweet Type Object
+        /* Setting all the elements to the Tweet Type Object
         Tweet tweet = new Tweet();
         tweet.setText(text);
         tweet.setDate((String) obj.get("date"));
         tweet.setHashtags(hashtags);
 
         outputCollector.emit(new Values(tweet));
-        outputCollector.ack(input);
+        outputCollector.ack(input);*/
     }
     
     @Override
