@@ -13,7 +13,6 @@ import java.util.Collections;
 import java.util.Map;
 import java.util.Properties;
 import me.dekimpe.avro.value.Tweet;
-import me.dekimpe.avro.key.Tweet;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.clients.consumer.ConsumerRecords;
@@ -31,7 +30,7 @@ import org.apache.storm.tuple.Values;
  * @author Coreuh
  */
 public class TweetsAvroSpout extends BaseRichSpout {
-    private KafkaConsumer<String, Tweet> consumer;
+    private KafkaConsumer<me.dekimpe.avro.key.Tweet, Tweet> consumer;
     private SpoutOutputCollector outputCollector;
 
     @Override
@@ -60,8 +59,8 @@ public class TweetsAvroSpout extends BaseRichSpout {
             consumer = new KafkaConsumer<>(config);
             consumer.subscribe(Collections.singletonList("tweet"));
             while (true) {
-                ConsumerRecords<String, Tweet> records = consumer.poll(100);
-                for (ConsumerRecord<String, Tweet> record : records) {
+                ConsumerRecords<me.dekimpe.avro.key.Tweet, Tweet> records = consumer.poll(100);
+                for (ConsumerRecord<me.dekimpe.avro.key.Tweet, Tweet> record : records) {
                     Tweet tweet = record.value();
                     outputCollector.emit(new Values(tweet));
                 }
