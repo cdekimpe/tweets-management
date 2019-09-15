@@ -12,7 +12,7 @@ import java.net.UnknownHostException;
 import java.util.Collections;
 import java.util.Map;
 import java.util.Properties;
-import me.dekimpe.types.Tweet;
+import me.dekimpe.values.Tweet;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.clients.consumer.ConsumerRecords;
@@ -62,7 +62,7 @@ public class TweetsAvroSpout extends BaseRichSpout {
                 ConsumerRecords<String, Tweet> records = consumer.poll(100);
                 for (ConsumerRecord<String, Tweet> record : records) {
                     Tweet tweet = record.value();
-                    outputCollector.emit(new Values(tweet));
+                    outputCollector.emit(new Values());
                 }
             }
         } catch (UnknownHostException e) {
