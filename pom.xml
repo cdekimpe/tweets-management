@@ -80,7 +80,7 @@
                           <goal>schema</goal>
                       </goals>
                       <configuration>
-                          <sourceDirectory>${project.basedir}/src/main/avro/</sourceDirectory>
+                          <sourceDirectory>${project.basedir}/src/main/java/me/dekimpe/types</sourceDirectory>
                           <outputDirectory>${project.basedir}/src/main/java/</outputDirectory>
                       </configuration>
                   </execution>
@@ -91,7 +91,6 @@
                 <artifactId>maven-shade-plugin</artifactId>
                 <version>1.4</version>
                 <configuration>
-                    <!-- Additional configuration. -->
                     <createDependencyReducedPom>true</createDependencyReducedPom>
                     <filters>
                         <filter>
