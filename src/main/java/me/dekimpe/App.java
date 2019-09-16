@@ -24,7 +24,7 @@ public class App
         
         builder.setSpout("tweets", new TweetsAvroSpout());
         
-        builder.setBolt("speed-layer", new TweetsSpeedLayerBolt().withTumblingWindow(BaseWindowedBolt.Count.of(1000)))
+        builder.setBolt("speed-layer", new TweetsSpeedLayerBolt().withTumblingWindow(BaseWindowedBolt.Count.of(100)))
                 .shuffleGrouping("tweets");
         
         StormTopology topology = builder.createTopology();
