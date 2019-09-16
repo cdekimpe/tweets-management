@@ -17,7 +17,6 @@ import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.clients.consumer.ConsumerRecords;
 import org.apache.kafka.clients.consumer.KafkaConsumer;
-import org.apache.kafka.common.serialization.StringDeserializer;
 import org.apache.storm.spout.SpoutOutputCollector;
 import org.apache.storm.task.TopologyContext;
 import org.apache.storm.topology.OutputFieldsDeclarer;
@@ -64,6 +63,7 @@ public class TweetsAvroSpout extends BaseRichSpout {
                     Tweet tweet = record.value();
                     outputCollector.emit(new Values(tweet));
                 }
+                break;
             }
         } catch (UnknownHostException e) {
             System.err.println(e);
