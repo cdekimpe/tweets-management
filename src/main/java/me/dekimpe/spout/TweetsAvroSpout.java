@@ -34,17 +34,8 @@ public class TweetsAvroSpout extends BaseRichSpout {
 
     @Override
     public void open(Map map, TopologyContext tc, SpoutOutputCollector soc) {
-        outputCollector = soc;
-    }
-
-    @Override
-    public void declareOutputFields(OutputFieldsDeclarer declarer) {
-        declarer.declare(new Fields("tweet"));
-    }
-
-    @Override
-    public void nextTuple() {
         try {
+            outputCollector = soc;
             Properties config = new Properties();
             config.put("client.id", java.net.InetAddress.getLocalHost().getHostName());
             config.put("group.id", "batch-layer");
@@ -57,16 +48,22 @@ public class TweetsAvroSpout extends BaseRichSpout {
             config.put(AbstractKafkaAvroSerDeConfig.SCHEMA_REGISTRY_URL_CONFIG, "http://192.168.10.20:8081");
             consumer = new KafkaConsumer<>(config);
             consumer.subscribe(Collections.singletonList("tweet"));
-            while (true) {
-                ConsumerRecords<me.dekimpe.avro.key.Tweet, Tweet> records = consumer.poll(100);
-                for (ConsumerRecord<me.dekimpe.avro.key.Tweet, Tweet> record : records) {
-                    Tweet tweet = record.value();
-                    outputCollector.emit(new Values(tweet));
-                }
-                break;
-            }
         } catch (UnknownHostException e) {
             System.err.println(e);
+        }
+    }
+
+    @Override
+    public void declareOutputFields(OutputFieldsDeclarer declarer) {
+        declarer.declare(new Fields("tweet"));
+    }
+
+    @Override
+    public void nextTuple() {
+        ConsumerRecords<me.dekimpe.avro.key.Tweet, Tweet> records = consumer.poll(1000);
+        for (ConsumerRecord<me.dekimpe.avro.key.Tweet, Tweet> record : records) {
+            Tweet tweet = record.value();
+            outputCollector.emit(new Values(tweet));
         }
     }
 
