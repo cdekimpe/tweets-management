@@ -1,6 +1,5 @@
 package me.dekimpe;
 
-import me.dekimpe.bolt.TweetsParsingBolt;
 import me.dekimpe.bolt.TweetsSpeedLayerBolt;
 import me.dekimpe.spout.TweetsAvroSpout;
 import org.apache.storm.Config;
@@ -25,7 +24,7 @@ public class App
         
         builder.setSpout("tweets", new TweetsAvroSpout());
         
-        builder.setBolt("speed-layer", new TweetsSpeedLayerBolt().withTumblingWindow(BaseWindowedBolt.Count.of(100)))
+        builder.setBolt("speed-layer", new TweetsSpeedLayerBolt().withTumblingWindow(BaseWindowedBolt.Count.of(1000)))
                 .shuffleGrouping("tweets");
         
         StormTopology topology = builder.createTopology();

@@ -58,12 +58,10 @@ public class TweetsAvroSpout extends BaseRichSpout {
             config.put(AbstractKafkaAvroSerDeConfig.SCHEMA_REGISTRY_URL_CONFIG, "http://192.168.10.20:8081");
             consumer = new KafkaConsumer<>(config);
             consumer.subscribe(Collections.singletonList("tweet"));
-            while (true) {
-                ConsumerRecords<me.dekimpe.avro.key.Tweet, Tweet> records = consumer.poll(100);
-                for (ConsumerRecord<me.dekimpe.avro.key.Tweet, Tweet> record : records) {
-                    Tweet tweet = record.value();
-                    outputCollector.emit(new Values(tweet));
-                }
+            ConsumerRecords<me.dekimpe.avro.key.Tweet, Tweet> records = consumer.poll(100);
+            for (ConsumerRecord<me.dekimpe.avro.key.Tweet, Tweet> record : records) {
+                Tweet tweet = record.value();
+                outputCollector.emit(new Values(tweet));
             }
         } catch (UnknownHostException e) {
             System.err.println(e);
