@@ -16,6 +16,6 @@ public class ElasticSearch {
     public static final String HOST3 = "storm-supervisor-3";
     public static final int PORT = 9300;
     public static final String CLUSTER_NAME = "projet3";
-    public static final String INDEX = "tweets-management";
+    public static final String INDEX = "hashtags-management";
     
 }
