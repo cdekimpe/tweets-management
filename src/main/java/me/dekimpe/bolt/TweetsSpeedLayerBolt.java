@@ -69,6 +69,7 @@ public class TweetsSpeedLayerBolt extends BaseWindowedBolt {
             Tweet tweet = (Tweet) input.getValueByField("tweet");
             for (String hashtag : tweet.getHashtags()) {
                 json = "{\"timestamp\": " + (tweet.getTimestamp() * 1000) + ", \"hashtag\": \"" + hashtag + "\"}";
+                System.out.println(json);
                 bulkRequest.add(client.prepareIndex(ElasticSearch.INDEX, "hashtags")
                     .setSource(json, XContentType.JSON));
             }
