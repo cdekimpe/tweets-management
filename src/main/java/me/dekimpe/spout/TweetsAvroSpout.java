@@ -47,7 +47,7 @@ public class TweetsAvroSpout extends BaseRichSpout {
             config.put(KafkaAvroDeserializerConfig.SPECIFIC_AVRO_READER_CONFIG, true);
             config.put(AbstractKafkaAvroSerDeConfig.SCHEMA_REGISTRY_URL_CONFIG, "http://192.168.10.20:8081");
             consumer = new KafkaConsumer<>(config);
-            consumer.subscribe(Collections.singletonList("tweet"));
+            consumer.subscribe(Collections.singletonList("tweets"));
         } catch (UnknownHostException e) {
             System.err.println(e);
         }
