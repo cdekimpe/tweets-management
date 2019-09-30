@@ -38,7 +38,7 @@ public class TweetsAvroSpout extends BaseRichSpout {
             outputCollector = soc;
             Properties config = new Properties();
             config.put("client.id", java.net.InetAddress.getLocalHost().getHostName());
-            config.put("group.id", "batch-layer");
+            config.put("group.id", "speed-layer");
             config.put("bootstrap.servers", "confluent-kafka:9092");
             config.put(ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG, "true");
             config.put(ConsumerConfig.AUTO_COMMIT_INTERVAL_MS_CONFIG, "1000");
